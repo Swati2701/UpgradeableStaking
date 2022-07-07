@@ -19,6 +19,9 @@ contract UpgradeableStaking {
     uint256 stakingBalance;
   }
 
+  /* *@dev Mapping from uint256 stakeId to get stakeInfo
+  uint256 => StakingInfo struct
+  */
   mapping(uint256 => StakingInfo) public stakeInfo;
 
   event Stake(address user, uint256 stakingAmount);
@@ -31,6 +34,11 @@ contract UpgradeableStaking {
     stakeId = 1;
   }
 
+  /*
+   *@dev A stake function to stake amount
+   *@param  stakeAmount uint256 stakeAmount
+   * Emits a {Stake} event
+   */
   function stake(uint256 stakeAmount) external {
     StakingInfo storage stake_ = stakeInfo[stakeId];
     require(msg.sender != address(0), "zero address");
@@ -45,6 +53,10 @@ contract UpgradeableStaking {
     emit Stake(msg.sender, stakeAmount);
   }
 
+  /*
+   *@dev unstake a token after some time using stakeId
+   *@param _stakeId uint256 stakeId
+   */
   function unstake(uint256 _stakeId) external {
     StakingInfo storage stake_ = stakeInfo[_stakeId];
     uint256 stakeAmount = stake_.stakingBalance;
@@ -87,6 +99,12 @@ contract UpgradeableStaking {
     stake_.stakingBalance -= stakeAmount;
   }
 
+  /*
+  @dev calculateReward function is used to calculate a reward according to interest rate & stakeAmount
+  @param APR uint256 is a interest rate
+  @param _stakeAmount uint256 is a stakeAmount
+  @param _stakeduration uint256 is a time at which user unstake amount
+   */
   function calculateReward(
     uint256 APR,
     uint256 _stakeAmount,
@@ -96,6 +114,10 @@ contract UpgradeableStaking {
     return _reward;
   }
 
+  /*
+   * @dev toGetPerk is  function which used to calculate extra perk based on dollar amount
+   *@param _stakeId uint256 stakeId
+   */
   function toGetPerk(uint256 _stakeId) internal returns (uint256) {
     uint256 _stakeAmount = stakeInfo[_stakeId].stakingBalance;
     priceInDollar =
