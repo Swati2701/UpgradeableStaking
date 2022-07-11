@@ -1,3 +1,4 @@
+const { upgrades } = require("hardhat");
 const hre = require("hardhat");
 
 async function main() {
@@ -29,6 +30,9 @@ async function main() {
     "upgradeable staking contract deployed to:",
     upgradeableStaking.address
   );
+
+  await upgrades.upgradeProxy(upgradeableStaking.address, UpgradeableStaking);
+  console.log("Staking Contract Upgraded");
 }
 
 main()
